@@ -19,13 +19,23 @@ function App() {
     },
 ];
 
-const [todos, setTodos] = useState(intialTodos);
+const [todos, setTodos] = useState(
+  () => JSON.parse(localStorage.getItem('todos')) || []
+);
+
+useEffect(() => {
+  localStorage.setItem('todos', JSON.stringify(todos))
+}, [todos])
 
 function deleteTodo(id) {
   const newTodos = todos.filter(todo => {
     return todo.id !== id
   })
   setTodos(newTodos);
+}
+
+function addTodo(todo) {
+  setTodos([...todos, todo])
 }
 
   return (
@@ -35,7 +45,7 @@ function deleteTodo(id) {
           To Do Application
         </Heading>
         <TodoList todos = {todos} deleteTodo= {deleteTodo}/>
-        <Added/>
+        <Added addTodo = {addTodo}/>
     </VStack>
     
   )
